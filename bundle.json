@@ -1,0 +1,39 @@
+{
+    "name": "@ohos/libsnd",
+    "version": "",
+    "description": "libsndfile is a C library for reading and writing files containing sampled audio data.",
+    "homePage": "https://gitee.com/openharmony",
+    "license": "LGPL-2.1",
+    "repository": "https://gitee.com/openharmony/third_party_libsnd",
+    "domain": "os",
+    "language": "",
+    "publishAs": "code-segment",
+    "private": false,
+    "scripts": {},
+    "tags": [
+        "third_party"
+    ],
+    "keywords": [
+        "third-party",
+        "libsnd"
+    ],
+    "envs": [],
+    "dirs": [],
+    "segment": {
+        "destPath": "third_party/libsnd"
+    },
+    "component": {
+        "name": "thirdparty_libsnd",
+        "subsystem": "",
+        "syscap": [],
+        "features": [],
+        "adapted_system_type": [],
+        "rom": "",
+        "ram": "",
+        "build": {
+            "sub_component": [],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
