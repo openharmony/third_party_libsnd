@@ -67,7 +67,7 @@ Note:If the text contains special characters, please escape them according to th
                 <filteritem type="filepath" name="*.*" desc="libsnd files"/>
             </filefilter>
             <filefilter name="binaryFileTypePolicyFilter" desc="Filters for binary file policies">
-                <filteritem type="filepath" name=".*" desc="Resource, config and certification binary."/>
+                <filteritem type="filepath" name="docs/libsndfile.jpg" desc="文档说明图片，来源于libsndfile 1.0.31版本，遵循开源软件许可声明"/>
             </filefilter>
         </filefilterlist>
     </oatconfig>
