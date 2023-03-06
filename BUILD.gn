@@ -29,6 +29,7 @@ config("sndfile_config") {
   cflags = [
     "-Wall",
     "-Werror",
+    "-Wno-unused-but-set-variable",
   ]
 }
 
