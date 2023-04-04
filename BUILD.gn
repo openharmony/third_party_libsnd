@@ -128,12 +128,12 @@ ohos_source_set("sndfile_sources") {
 
   configs = [ ":sndfile_config" ]
   subsystem_name = "multimedia"
-  part_name = "multimedia_audio_framework"
+  part_name = "audio_framework"
 }
 
 ohos_shared_library("sndfile") {
   deps = [ ":sndfile_sources" ]
 
   subsystem_name = "multimedia"
-  part_name = "multimedia_audio_framework"
+  part_name = "audio_framework"
 }
