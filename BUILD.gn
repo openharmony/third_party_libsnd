@@ -134,6 +134,7 @@ ohos_source_set("sndfile_sources") {
 ohos_shared_library("sndfile") {
   deps = [ ":sndfile_sources" ]
 
+  innerapi_tags = [ "platformsdk_indirect" ]
   subsystem_name = "multimedia"
   part_name = "audio_framework"
 }
