@@ -59,8 +59,6 @@ Note:If the text contains special characters, please escape them according to th
         <licensefile>COPYING</licensefile>
         <policylist>
             <policy name="projectPolicy" desc="libsnd audio source code">
-                <policyitem type="license" name="*" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="Third party software,三方开源软件无需检测文件头是否遗漏许可声明"/>
-                <policyitem type="copyright" name="*" path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Third party software,三方开源软件无需检测文件头是否遗漏版权声明"/>
                 <policyitem type="compatibility" name="Apache-2.0" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="Apache-2.0协议,不影响兼容性"/>
                 <policyitem type="compatibility" name="BSD-3-Clause" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="BSD类协议,不影响兼容性"/>
                 <policyitem type="compatibility" name="LGPL-2.1+" path=".*" rule="may" group="defaultGroup" filefilter="defaultPolicyFilter" desc="Dynamic link,动态链接使用,不影响兼容性"/>
