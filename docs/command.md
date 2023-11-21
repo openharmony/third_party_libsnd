@@ -64,6 +64,7 @@ The available commands are as follows:
 | [SFC_WAVEX_SET_AMBISONIC](#sfc_wavex_set_ambisonic)               | Modify a WAVEX header for Ambisonic format.             |
 | [SFC_SET_VBR_ENCODING_QUALITY](#sfc_set_vbr_encoding_quality)     | Set the Variable Bit Rate encoding quality.             |
 | [SFC_SET_OGG_PAGE_LATENCY_MS](#sfc_set_ogg_page_latency_ms)       | Set Ogg page latency for Opus file.                     |
+| [SFC_GET_OGG_STREAM_SERIALNO](#sfc_get_ogg_stream_serialno)       | Get Ogg stream serial number.                           |
 | [SFC_SET_COMPRESSION_LEVEL](#sfc_set_compression_level)           | Set the compression level.                              |
 | [SFC_RAW_DATA_NEEDS_ENDSWAP](#sfc_raw_data_needs_endswap)         | Determine if raw data needs endswapping.                |
 | [SFC_GET_BROADCAST_INFO](#sfc_get_broadcast_info)                 | Get the Broadcast Chunk info.                           |
@@ -81,6 +82,8 @@ The available commands are as follows:
 | [SFC_RF64_AUTO_DOWNGRADE](#sfc_rf64_auto_downgrade)               | Set auto downgrade from RF64 to WAV.                    |
 | [SFC_GET_ORIGINAL_SAMPLERATE](#sfc_get_original_samplerate)       | Get original samplerate metadata.                       |
 | [SFC_SET_ORIGINAL_SAMPLERATE](#sfc_set_original_samplerate)       | Set original samplerate metadata.                       |
+| [SFC_GET_BITRATE_MODE](#sfc_get_bitrate_mode)                     | Get bitrate mode.                                       |
+| [SFC_SET_BITRATE_MODE](#sfc_set_bitrate_mode)                     | Set bitrate mode.                                       |
 
 ---
 
@@ -1271,6 +1274,30 @@ datasize
 
 0 on success and non-zero otherwise.
 
+## SFC_GET_OGG_STREAM_SERIALNO
+
+Get the Ogg stream serial number for files with the Ogg major format. Ogg
+stream serail numbers are a randomly chosen 32-bit value, used for
+differentiating logical Ogg streams.
+
+### Parameters
+
+sndfile
+: A valid SNDFILE* pointer
+
+cmd
+: SFC_SET_OGG_STREAM_SERIALNO
+
+data
+: A pointer to a 32-bit int value
+
+datasize
+: sizeof (int32_t) = 4
+
+### Return value
+
+0 on success and non-zero otherwise.
+
 ## SFC_SET_COMPRESSION_LEVEL
 
 Set the compression level. The compression level should be between 0.0 (minimum
@@ -1927,3 +1954,63 @@ Returns SF_TRUE on success, SF_FALSE otherwise.
 On write, can only succeed if no data has been written. On read, if successful,
 [SFC_GET_CURRENT_SF_INFO](#sfc_get_current_sf_info) should be called to
 determine the new frames count and samplerate
+
+## SFC_GET_BITRATE_MODE
+
+Get bitrate mode.
+
+The bitrate mode is one of:
+
+| Name                     | Value | Description       |
+|:-------------------------|:------|:------------------|
+| SF_BITRATE_MODE_CONSTANT | 800   | Constant bitrate. |
+| SF_BITRATE_MODE_AVERAGE  | 801   | Average bitrate.  |
+| SF_BITRATE_MODE_VARIABLE | 802   | Variable bitrate. |
+
+### Parameters
+
+sndfile
+: A valid SNDFILE* pointer
+
+cmd
+: SFC_GET_BITRATE_MODE
+
+data
+: NULL
+
+datasize
+: anything
+
+### Return value
+
+Returns one of `SF_BITRATE_MODE_XXX` on success, `-1` otherwise.
+
+## SFC_SET_BITRATE_MODE
+
+Set bitrate mode.
+
+The bitrate mode is one of:
+
+| Name                     | Value | Description       |
+|:-------------------------|:------|:------------------|
+| SF_BITRATE_MODE_CONSTANT | 800   | Constant bitrate. |
+| SF_BITRATE_MODE_AVERAGE  | 801   | Average bitrate.  |
+| SF_BITRATE_MODE_VARIABLE | 802   | Variable bitrate. |
+
+### Parameters
+
+sndfile
+: A valid SNDFILE* pointer
+
+cmd
+: SFC_SET_BITRATE_MODE
+
+data
+: pointer to an integer
+
+datasize
+: sizeof (int)
+
+### Return value
+
+Returns `SF_TRUE` on success, `SF_FALSE` otherwise.

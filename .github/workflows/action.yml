@@ -18,34 +18,38 @@ jobs:
           ubuntu-clang-cmake-shared,
           macos-cmake,
           macos-cmake-shared,
-          windows-vs2019-x64,
-          windows-vs2019-x64-shared,
-          windows-vs2019-Win32,
-          windows-vs2019-Win32-shared
+          windows-vs2022-x64,
+          windows-vs2022-x64-shared,
+          windows-vs2022-Win32,
+          windows-vs2022-Win32-shared
         ]
         include:
           - name: ubuntu-gcc-autotools
             os: ubuntu-latest
             cc: gcc
             cxx: g++
+            autotools-options: --enable-werror
             build-system: autotools
 
           - name: ubuntu-clang-autotools
             os: ubuntu-latest
             cc: clang
             cxx: clang++
+            autotools-options: --enable-werror
             build-system: autotools
 
           - name: ubuntu-gcc-ossfuzz
             os: ubuntu-latest
             cc: gcc
             cxx: g++
+            autotools-options: --enable-werror
             build-system: ossfuzz
 
           - name: macos-autotools
             os: macos-latest
             cc: clang
             cxx: clang++
+            autotools-options: --enable-werror
             build-system: autotools
 
           - name: ubuntu-gcc-cmake
@@ -117,22 +121,22 @@ jobs:
               -DCMAKE_C_FLAGS="-Wall -Wextra"
               -DCMAKE_VERBOSE_MAKEFILE=ON
 
-          - name: windows-vs2019-x64
+          - name: windows-vs2022-x64
             os: windows-latest
             triplet: 'x64-windows-static'
             build-system: cmake
-            cmake-generator: 'Visual Studio 16 2019'
+            cmake-generator: 'Visual Studio 17 2022'
             cmake-options: >-
               -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>
               -DCMAKE_BUILD_TYPE=Release
               -DVCPKG_TARGET_TRIPLET=x64-windows-static
               -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-          - name: windows-vs2019-x64-shared
+          - name: windows-vs2022-x64-shared
             os: windows-latest
             triplet: 'x64-windows-static'
             build-system: cmake
-            cmake-generator: 'Visual Studio 16 2019'
+            cmake-generator: 'Visual Studio 17 2022'
             cmake-options: >-
               -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>
               -DBUILD_SHARED_LIBS=ON
@@ -143,11 +147,11 @@ jobs:
               -DVCPKG_TARGET_TRIPLET=x64-windows-static
               -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-          - name: windows-vs2019-Win32
+          - name: windows-vs2022-Win32
             os: windows-latest
             triplet: 'x86-windows-static'
             build-system: cmake
-            cmake-generator: 'Visual Studio 16 2019'
+            cmake-generator: 'Visual Studio 17 2022'
             cmake-options: >-
               -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>
               -DCMAKE_GENERATOR_PLATFORM=Win32
@@ -155,11 +159,11 @@ jobs:
               -DVCPKG_TARGET_TRIPLET=x86-windows-static
               -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-          - name: windows-vs2019-Win32-shared
+          - name: windows-vs2022-Win32-shared
             os: windows-latest
             triplet: 'x86-windows-static'
             build-system: cmake
-            cmake-generator: 'Visual Studio 16 2019'
+            cmake-generator: 'Visual Studio 17 2022'
             cmake-options: >-
               -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>
               -DCMAKE_GENERATOR_PLATFORM=Win32
@@ -179,16 +183,25 @@ jobs:
       - name: Install MacOS dependencies
         if: startsWith(matrix.os,'macos')
         run: |
-          brew install automake autogen speex
+          brew install automake autogen speex mpg123
 
-      - name: Install Lunux dependencies
+      - name: Install Linux dependencies
         if: startsWith(matrix.os,'ubuntu')
-        run: sudo apt-get install -y autogen ninja-build libogg-dev libvorbis-dev libflac-dev libopus-dev libasound2-dev libsqlite3-dev libspeex-dev
+        run: sudo apt-get update -y && sudo apt-get install -y autogen ninja-build libogg-dev libvorbis-dev libflac-dev libopus-dev libasound2-dev libsqlite3-dev libspeex-dev libmp3lame-dev libmpg123-dev
 
-      - name: Install Windows dependencies
+      - name: Setup NuGet Credentials
+        env:
+          VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
         if: startsWith(matrix.os,'windows')
-        run: |
-          vcpkg install libvorbis libflac opus sqlite3 speex --triplet ${{matrix.triplet}}
+        shell: 'bash'
+        run: >
+          `vcpkg fetch nuget | tail -n 1`
+          sources add
+          -source "https://nuget.pkg.github.com/libsndfile/index.json"
+          -storepasswordincleartext
+          -name "GitHub"
+          -username "evpobr"
+          -password "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Configure, build and test with Autotools
         env:
@@ -196,17 +209,18 @@ jobs:
           CXX: ${{ matrix.cxx }}
         if: startsWith(matrix.build-system,'autotools')
         run: |
-          ./autogen.sh
+          autoreconf -vif
           if [[ "${CC}" == "clang" ]]; then
-            ./configure --enable-werror && make clean all check && make distcheck
+            ./configure --enable-werror && make distcheck
           else
-            Scripts/asan-configure.sh --enable-werror && make clean all check && make distcheck
+            Scripts/asan-configure.sh --enable-werror && make distcheck
           fi
 
       - name: Configure, build and test with CMake
         env:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
+          VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
         if: startsWith(matrix.build-system,'cmake')
         run: |
           mkdir build

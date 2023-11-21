@@ -23,9 +23,10 @@ apt-get -y install autoconf autogen automake libtool pkg-config python
 # libasound2-dev libflac-dev libogg-dev libopus-dev libvorbis-dev
 
 # Compile the fuzzer.
-./autogen.sh
+autoreconf -vif
 ./configure --disable-shared --enable-ossfuzzers
 make V=1
 
 # Copy the fuzzer to the output directory.
 cp -v ossfuzz/sndfile_fuzzer $OUT/
+cp -v ossfuzz/sndfile_alt_fuzzer $OUT/

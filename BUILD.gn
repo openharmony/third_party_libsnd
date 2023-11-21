@@ -93,6 +93,7 @@ ohos_source_set("sndfile_sources") {
     "src/mat4.c",
     "src/mat5.c",
     "src/mpc2k.c",
+    "src/mpeg.c",
     "src/ms_adpcm.c",
     "src/nist.c",
     "src/nms_adpcm.c",
