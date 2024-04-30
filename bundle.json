@@ -26,7 +26,18 @@
         },
         "build": {
             "sub_component": [],
-            "inner_kits": [],
+            "inner_kits": [
+                {
+                    "name" : "//third_party/libsnd:sndfile",
+                    "header": {
+                        "header_files": [
+                            "config.h",
+                            "sndfile.h"
+                        ],
+                        "header_base": "//third_party/libsnd/include"
+                    }
+                }
+            ],
             "test": []
         }
     }
