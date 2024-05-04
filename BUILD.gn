@@ -31,6 +31,10 @@ config("sndfile_config") {
   ]
 }
 
+config("export_include_config") {
+  include_dirs = [ "include" ]
+}
+
 ohos_source_set("sndfile_sources") {
   sources = [
     "src/ALAC/ALACBitUtilities.c",
@@ -132,6 +136,8 @@ ohos_source_set("sndfile_sources") {
 
 ohos_shared_library("sndfile") {
   deps = [ ":sndfile_sources" ]
+
+  public_configs = [ ":export_include_config" ]
 
   innerapi_tags = [ "platformsdk_indirect" ]
   subsystem_name = "thirdparty"
