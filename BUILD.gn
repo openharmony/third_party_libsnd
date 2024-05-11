@@ -139,7 +139,10 @@ ohos_shared_library("sndfile") {
 
   public_configs = [ ":export_include_config" ]
 
-  innerapi_tags = [ "platformsdk_indirect" ]
+  innerapi_tags = [
+    "chipsetsdk_indirect",
+    "platformsdk_indirect",
+  ]
   subsystem_name = "thirdparty"
   part_name = "libsnd"
 }
